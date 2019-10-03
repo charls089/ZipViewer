@@ -23,10 +23,6 @@ class ViewPageActivity : AppCompatActivity() {
                     applicationContext,
                     SharedPrefHelper.KEY_LAST_OPEN_FILE_PATH
                 )
-                val lastPosition = SharedPrefHelper.getInt(
-                    applicationContext,
-                    SharedPrefHelper.KEY_LAST_VIEW_FILE_PAGE
-                )
                 intent?.extras?.getString("path")?.let {
                     SharedPrefHelper.setString(
                         applicationContext,
