@@ -1,10 +1,12 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.kobbi.project.zipviewer.BR
+import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ItemFileBinding
 import com.kobbi.weather.info.presenter.listener.ClickListener
 import com.kobbi.weather.info.presenter.listener.LongClickListener

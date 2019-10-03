@@ -1,4 +1,4 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.kobbi.project.zipviewer.BR
+import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.FragmentViewBinding
 
 class ViewFragment: Fragment() {

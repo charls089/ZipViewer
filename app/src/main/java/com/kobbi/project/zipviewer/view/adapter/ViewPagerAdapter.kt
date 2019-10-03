@@ -1,9 +1,10 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
+import com.kobbi.project.zipviewer.ViewFragment
 import java.io.File
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, items:List<File>) :

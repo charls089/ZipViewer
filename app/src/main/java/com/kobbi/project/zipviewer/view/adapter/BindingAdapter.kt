@@ -1,4 +1,4 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.adapter
 
 import android.view.View
 import android.widget.ImageView
@@ -6,6 +6,8 @@ import androidx.databinding.BindingAdapter
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.kobbi.project.zipviewer.DirAdapter
+import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.viewmodel.DirViewModel
 import com.kobbi.weather.info.presenter.listener.ClickListener
 import java.io.File

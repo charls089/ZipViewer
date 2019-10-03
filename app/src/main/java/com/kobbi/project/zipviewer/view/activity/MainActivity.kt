@@ -1,4 +1,4 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityMainBinding
 import com.kobbi.project.zipviewer.viewmodel.DirViewModel
 

@@ -1,9 +1,10 @@
-package com.kobbi.project.zipviewer
+package com.kobbi.project.zipviewer.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import com.kobbi.project.zipviewer.R
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
 /**
