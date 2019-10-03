@@ -23,7 +23,6 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
     private var rootPath = Environment.getExternalStorageDirectory().toString()
 
     private val mSelectedDir = mutableListOf<String>()
-    private val mExternalPath = application.applicationContext.getExternalFilesDir(null)
     private val mCachePath = application.applicationContext.cacheDir
 
     init {

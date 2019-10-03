@@ -32,11 +32,16 @@ class FileViewModel : ViewModel() {
     }
 
     fun setItems(path: String) {
-        val fileList = File(path).parentFile.listFiles().filter {
-            it.extension.endsWith("png") || it.extension.endsWith("jpg") || it.extension.endsWith("gif")
+        val f = File(path)
+        val file = if (f.isDirectory) f else f.parentFile
+        val fileList = file.listFiles().filter {
+            it.extension.endsWith("png") || it.extension.endsWith("jpg") || it.extension.endsWith(
+                "gif"
+            )
         }
         _fileList.postValue(fileList)
-        val lastPosition = fileList.indexOf(File(path))
-        _position.postValue(lastPosition)
+        val lastPosition = fileList.indexOf(f)
+        if (lastPosition != -1)
+            _position.postValue(lastPosition)
     }
 }

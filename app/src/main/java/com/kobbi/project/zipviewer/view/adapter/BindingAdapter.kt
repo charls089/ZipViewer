@@ -100,9 +100,9 @@ class BindingAdapter private constructor() {
 
         @BindingAdapter("app:setTotal", "app:setPosition")
         @JvmStatic
-        fun setTotal(view: TextView, items: List<File>?, position:Int) {
+        fun setTotal(view: TextView, items: List<File>?, position: Int) {
             items?.let {
-                view.text = "$position / ${it.size}"
+                view.text = "${position + 1} / ${it.size}"
             }
         }
 

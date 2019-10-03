@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityMainBinding
 import com.kobbi.project.zipviewer.viewmodel.DirViewModel
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     })
                     intent?.extras?.getString("path")?.let {
-                        setItems(File(it).parent)
+                        setItems(it)
                     }
                 }
             dirVm = mDirViewModel

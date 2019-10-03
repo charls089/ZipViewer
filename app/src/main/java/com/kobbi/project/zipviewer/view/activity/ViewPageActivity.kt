@@ -14,7 +14,6 @@ import com.kobbi.project.zipviewer.utils.SharedPrefHelper
 import com.kobbi.project.zipviewer.viewmodel.FileViewModel
 
 class ViewPageActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val fileViewModel =
@@ -31,7 +30,7 @@ class ViewPageActivity : AppCompatActivity() {
                     )
                     this.setItems(it)
                 } ?: if (savePath.isNotEmpty())
-                    this.setItems(savePath)
+                this.setItems(savePath)
                 position.observe(this@ViewPageActivity, Observer {
                     SharedPrefHelper.setInt(
                         applicationContext,
