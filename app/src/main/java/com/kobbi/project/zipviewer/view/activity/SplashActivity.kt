@@ -70,7 +70,7 @@ class SplashActivity : AppCompatActivity() {
         val intent = if (lastOpenFilePath.isEmpty())
             Intent(applicationContext, MainActivity::class.java)
         else
-            Intent(applicationContext, FullscreenActivity::class.java)
+            Intent(applicationContext, ViewPageActivity::class.java)
         startActivity(intent)
         finish()
     }

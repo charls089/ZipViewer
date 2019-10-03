@@ -1,14 +1,12 @@
 package com.kobbi.project.zipviewer.viewmodel
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
 import java.io.File
 
-class FileViewModel(application: Application) : AndroidViewModel(application) {
+class FileViewModel : ViewModel() {
     val fileList: LiveData<List<File>> get() = _fileList
     val position: LiveData<Int> get() = _position
     val state: LiveData<Int> get() = _state
@@ -33,15 +31,12 @@ class FileViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    init {
-        Log.e("####", "FileViewModel.init")
-    }
-
     fun setItems(path: String) {
-        Log.e("####", "FileViewModel.setItems() --> path : $path")
-        val fileList = File(path).listFiles().filter {
+        val fileList = File(path).parentFile.listFiles().filter {
             it.extension.endsWith("png") || it.extension.endsWith("jpg") || it.extension.endsWith("gif")
         }
         _fileList.postValue(fileList)
+        val lastPosition = fileList.indexOf(File(path))
+        _position.postValue(lastPosition)
     }
 }

@@ -3,7 +3,6 @@ package com.kobbi.project.zipviewer.viewmodel
 import android.app.Application
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,26 +24,25 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mSelectedDir = mutableListOf<String>()
     private val mExternalPath = application.applicationContext.getExternalFilesDir(null)
+    private val mCachePath = application.applicationContext.cacheDir
 
     init {
         setItems(rootPath)
     }
 
     fun clickItem(position: Int) {
-        Log.e("####", "clickItem() --> $position")
         _currentItems.value?.get(position)?.let {
-            Log.e("####", "clickItem() --> item : $it")
             if (it.isDirectory) {
                 mSelectedDir.add(it.name)
                 setItems(getCurrentPath())
             } else if (it.extension.endsWith("zip")) {
                 //unzip
-                unzip(it, mExternalPath)
+                unzip(it, mCachePath)
             } else if (it.extension.endsWith("png") ||
                 it.extension.endsWith("jpg") ||
                 it.extension.endsWith("gif")
             ) {
-                _showView.call(it.parent)
+                _showView.call(it.path)
             }
         }
     }
@@ -52,19 +50,17 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
     fun goToPrevPath() {
         if (mSelectedDir.isNotEmpty())
             mSelectedDir.removeAt(mSelectedDir.size - 1)
-        Log.e("####", "mSelectedDir : $mSelectedDir")
         setItems(getCurrentPath())
     }
 
-    private fun setItems(path: String) {
+    fun setItems(path: String) {
         val filterList = File(path).listFiles(FileFilter {
-            it.isDirectory ||
+            (it.isDirectory && !it.name.startsWith('.'))||
                     it.extension.endsWith("zip") ||
                     it.extension.endsWith("png") ||
                     it.extension.endsWith("jpg") ||
                     it.extension.endsWith("gif")
         })?.toList()
-        Log.e("####", " filterList = $filterList")
         _currentItems.postValue(filterList)
         _currentPath.postValue(path)
     }
@@ -78,11 +74,8 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun unzip(zipFile: File, targetPath: File?) {
-        Log.e("####", "targetPath : $targetPath")
         targetPath?.let {
             val dir = File(targetPath, zipFile.nameWithoutExtension).apply {
-                //                if (exists())
-//                    return
                 mkdirs()
             }
             val zip = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -93,8 +86,6 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
             while (enumeration.hasMoreElements()) {
                 val entry = enumeration.nextElement()
                 val destFilePath = File(dir, entry.name)
-                Log.e("####", "entry.name : ${entry.name}")
-                Log.e("####", "destFilePath : ${destFilePath.path}")
                 destFilePath.parentFile.mkdirs()
                 if (entry.isDirectory)
                     continue
@@ -105,8 +96,10 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             mSelectedDir.clear()
-            rootPath = dir.path
-            setItems(dir.path)
+//            rootPath = dir.path
+//            setItems(dir.path)
+            _showView.call(dir.path)
+
         }
     }
 }

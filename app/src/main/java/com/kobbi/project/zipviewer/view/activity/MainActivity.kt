@@ -3,7 +3,6 @@ package com.kobbi.project.zipviewer.view.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -11,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityMainBinding
 import com.kobbi.project.zipviewer.viewmodel.DirViewModel
-import com.kobbi.project.zipviewer.viewmodel.FileViewModel
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,15 +19,18 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).run {
-            mDirViewModel = ViewModelProviders.of(this@MainActivity)[DirViewModel::class.java].apply {
-                showView.observe(this@MainActivity, Observer {
-                    Log.e("####","showView.observe()")
-                    Intent(applicationContext, FullscreenActivity::class.java).run {
-                        putExtra("path",it)
-                        startActivity(this)
+            mDirViewModel =
+                ViewModelProviders.of(this@MainActivity)[DirViewModel::class.java].apply {
+                    showView.observe(this@MainActivity, Observer {
+                        Intent(applicationContext, ViewPageActivity::class.java).run {
+                            putExtra("path", it)
+                            startActivity(this)
+                        }
+                    })
+                    intent?.extras?.getString("path")?.let {
+                        setItems(File(it).parent)
                     }
-                })
-            }
+                }
             dirVm = mDirViewModel
             lifecycleOwner = this@MainActivity
         }
