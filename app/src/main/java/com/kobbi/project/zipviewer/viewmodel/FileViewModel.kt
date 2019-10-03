@@ -1,6 +1,7 @@
 package com.kobbi.project.zipviewer.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,5 +31,17 @@ class FileViewModel(application: Application) : AndroidViewModel(application) {
         override fun onPageSelected(position: Int) {
             _position.postValue(position)
         }
+    }
+
+    init {
+        Log.e("####", "FileViewModel.init")
+    }
+
+    fun setItems(path: String) {
+        Log.e("####", "FileViewModel.setItems() --> path : $path")
+        val fileList = File(path).listFiles().filter {
+            it.extension.endsWith("png") || it.extension.endsWith("jpg") || it.extension.endsWith("gif")
+        }
+        _fileList.postValue(fileList)
     }
 }

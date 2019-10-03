@@ -7,7 +7,7 @@
 
         <variable
             name="file"
-            type="java.io.File" />
+            type="String" />
     </data>
 
     <LinearLayout

@@ -1,6 +1,7 @@
 package com.kobbi.project.zipviewer.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,25 +11,26 @@ import com.kobbi.project.zipviewer.BR
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.FragmentViewBinding
 
-class ViewFragment: Fragment() {
+class ViewFragment : Fragment() {
     companion object {
         private const val POSITION_INDEX_CODE = "index"
 
-        fun newInstance(index: Int): ViewFragment {
+        fun newInstance(path: String): ViewFragment {
             val fragment = ViewFragment()
             val args = Bundle().apply {
-                putInt(POSITION_INDEX_CODE, index)
+                putString(POSITION_INDEX_CODE, path)
             }
             fragment.arguments = args
             return fragment
         }
     }
 
-    private var mPosition = 0
+    private var mPath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mPosition = arguments?.getInt(POSITION_INDEX_CODE) ?: 0
+        Log.e("####", "ViewFragment.onCreate()")
+        mPath = arguments?.getString(POSITION_INDEX_CODE) ?: ""
     }
 
     override fun onCreateView(
@@ -36,10 +38,10 @@ class ViewFragment: Fragment() {
     ): View? {
         val binding = DataBindingUtil.inflate<FragmentViewBinding>(
             inflater, R.layout.fragment_view, container, false
-        ).apply{
-        context?.applicationContext?.let {
+        ).apply {
+            context?.applicationContext?.let {
                 activity?.run {
-                    this@apply.setVariable(BR.file, file)
+                    this@apply.setVariable(BR.file, mPath)
                     lifecycleOwner = this@ViewFragment
                 }
             }

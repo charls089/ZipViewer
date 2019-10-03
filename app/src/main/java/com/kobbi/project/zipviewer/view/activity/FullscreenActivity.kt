@@ -3,8 +3,13 @@ package com.kobbi.project.zipviewer.view.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
+import com.kobbi.project.zipviewer.databinding.ActivityFullscreenBinding
+import com.kobbi.project.zipviewer.viewmodel.FileViewModel
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 
 /**
@@ -48,8 +53,20 @@ class FullscreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_fullscreen)
+        val fileViewModel = ViewModelProviders.of(this@FullscreenActivity)[FileViewModel::class.java].apply {
+            Log.e("####","FullscreenActivity.onCreate() --> intent.path : ${intent?.extras?.getString("path")}")
+            intent?.extras?.getString("path")?.let {
+                this.setItems(it)
+            }
+        }
+        DataBindingUtil.setContentView<ActivityFullscreenBinding>(
+            this,
+            R.layout.activity_fullscreen
+        ).run {
+            fileVm = fileViewModel
+            fragmentManager = supportFragmentManager
+            lifecycleOwner = this@FullscreenActivity
+        }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         mVisible = true

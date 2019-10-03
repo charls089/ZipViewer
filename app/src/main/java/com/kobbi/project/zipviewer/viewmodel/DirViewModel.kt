@@ -16,10 +16,10 @@ import java.util.zip.ZipFile
 class DirViewModel(application: Application) : AndroidViewModel(application) {
     val currentPath: LiveData<String> get() = _currentPath
     val currrentItems: LiveData<List<File>> get() = _currentItems
-    val showView:SingleLiveEvent<Any> get() = _showView
+    val showView: SingleLiveEvent<String> get() = _showView
     private val _currentPath: MutableLiveData<String> = MutableLiveData()
     private val _currentItems: MutableLiveData<List<File>> = MutableLiveData()
-    private val _showView: SingleLiveEvent<Any> = SingleLiveEvent()
+    private val _showView: SingleLiveEvent<String> = SingleLiveEvent()
 
     private var rootPath = Environment.getExternalStorageDirectory().toString()
 
@@ -41,14 +41,22 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
                 //unzip
                 unzip(it, mExternalPath)
             } else if (it.extension.endsWith("png") ||
-                    it.extension.endsWith("jpg") ||
-                    it.extension.endsWith("gif")) {
-                _showView.call()
+                it.extension.endsWith("jpg") ||
+                it.extension.endsWith("gif")
+            ) {
+                _showView.call(it.parent)
             }
         }
     }
 
-    fun setItems(path: String) {
+    fun goToPrevPath() {
+        if (mSelectedDir.isNotEmpty())
+            mSelectedDir.removeAt(mSelectedDir.size - 1)
+        Log.e("####", "mSelectedDir : $mSelectedDir")
+        setItems(getCurrentPath())
+    }
+
+    private fun setItems(path: String) {
         val filterList = File(path).listFiles(FileFilter {
             it.isDirectory ||
                     it.extension.endsWith("zip") ||
@@ -61,19 +69,12 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
         _currentPath.postValue(path)
     }
 
-    fun getCurrentPath(): String {
+    private fun getCurrentPath(): String {
         var selectPath = ""
         mSelectedDir.forEach {
             selectPath += "/$it"
         }
         return rootPath + selectPath
-    }
-
-    fun goToPrevPath() {
-        if (mSelectedDir.isNotEmpty())
-            mSelectedDir.removeAt(mSelectedDir.size - 1)
-        Log.e("####", "mSelectedDir : $mSelectedDir")
-        setItems(getCurrentPath())
     }
 
     private fun unzip(zipFile: File, targetPath: File?) {
