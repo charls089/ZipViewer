@@ -4,44 +4,33 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityViewPageBinding
-import com.kobbi.project.zipviewer.utils.SharedPrefHelper
+import com.kobbi.project.zipviewer.utils.Utils
 import com.kobbi.project.zipviewer.viewmodel.FileViewModel
 
-class ViewPageActivity : AppCompatActivity() {
+class ViewPageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val fileViewModel =
             ViewModelProviders.of(this@ViewPageActivity)[FileViewModel::class.java].apply {
-                val savePath = SharedPrefHelper.getString(
-                    applicationContext,
-                    SharedPrefHelper.KEY_LAST_OPEN_FILE_PATH
-                )
-                intent?.extras?.getString("path")?.let {
-                    SharedPrefHelper.setString(
-                        applicationContext,
-                        SharedPrefHelper.KEY_LAST_OPEN_FILE_PATH,
-                        it
-                    )
-                    this.setItems(it)
-                } ?: if (savePath.isNotEmpty())
-                this.setItems(savePath)
-                position.observe(this@ViewPageActivity, Observer {
-                    SharedPrefHelper.setInt(
-                        applicationContext,
-                        SharedPrefHelper.KEY_LAST_VIEW_FILE_PAGE,
-                        it
-                    )
-                })
+                applicationContext?.let { context ->
+                    val savePath = Utils.getPath(context)
+                    intent?.extras?.getString("path")?.let {
+                        Utils.setPath(context, it)
+                        this.setItems(it)
+                    } ?: if (savePath.isNotEmpty())
+                        this.setItems(savePath)
+                    position.observe(this@ViewPageActivity, Observer {
+                        Utils.setPage(context, it)
+                    })
+                }
             }
         DataBindingUtil.setContentView<ActivityViewPageBinding>(
-            this,
-            R.layout.activity_view_page
+            this, R.layout.activity_view_page
         ).run {
             fileVm = fileViewModel
             fragmentManager = supportFragmentManager
@@ -59,11 +48,7 @@ class ViewPageActivity : AppCompatActivity() {
             R.id.action_list, R.id.action_home -> {
                 val intent = Intent(applicationContext, MainActivity::class.java).apply {
                     if (item.itemId == R.id.action_list) {
-                        val path = SharedPrefHelper.getString(
-                            applicationContext,
-                            SharedPrefHelper.KEY_LAST_OPEN_FILE_PATH
-                        )
-                        putExtra("path", path)
+                        putExtra("path", Utils.getPath(applicationContext))
                     }
                 }
                 startActivity(intent)

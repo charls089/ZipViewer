@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kobbi.project.zipviewer.BR
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ItemFileBinding
+import com.kobbi.project.zipviewer.utils.Utils
 import com.kobbi.weather.info.presenter.listener.ClickListener
 import com.kobbi.weather.info.presenter.listener.LongClickListener
 import java.io.File
+import java.util.concurrent.Executors
 
 class DirAdapter(items: List<File>) : RecyclerView.Adapter<DirAdapter.ViewHolder>() {
     private val mItems = mutableListOf<File>()
@@ -69,6 +71,14 @@ class DirAdapter(items: List<File>) : RecyclerView.Adapter<DirAdapter.ViewHolder
 
         fun bind(file: File) {
             binding.setVariable(BR.file, file)
+            getImage(file)
+        }
+
+        private fun getImage(file: File) {
+            Executors.newFixedThreadPool(15).execute {
+                val bitmap = Utils.getBitmap(file, 480, 480)
+                binding.setVariable(BR.img, bitmap)
+            }
         }
     }
 }

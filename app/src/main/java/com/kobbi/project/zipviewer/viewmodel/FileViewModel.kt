@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.viewpager.widget.ViewPager
+import com.kobbi.project.zipviewer.utils.Utils
 import java.io.File
 
 class FileViewModel : ViewModel() {
@@ -35,9 +36,7 @@ class FileViewModel : ViewModel() {
         val f = File(path)
         val file = if (f.isDirectory) f else f.parentFile
         val fileList = file.listFiles().filter {
-            it.extension.endsWith("png") || it.extension.endsWith("jpg") || it.extension.endsWith(
-                "gif"
-            )
+            Utils.isPictureFile(it)
         }
         _fileList.postValue(fileList)
         val lastPosition = fileList.indexOf(f)

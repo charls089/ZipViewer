@@ -3,7 +3,6 @@ package com.kobbi.project.zipviewer.view.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,7 +10,7 @@ import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityMainBinding
 import com.kobbi.project.zipviewer.viewmodel.DirViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private var mDirViewModel: DirViewModel? = null
 
@@ -24,6 +23,7 @@ class MainActivity : AppCompatActivity() {
                         Intent(applicationContext, ViewPageActivity::class.java).run {
                             putExtra("path", it)
                             startActivity(this)
+                            finish()
                         }
                     })
                     intent?.extras?.getString("path")?.let {
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (mDirViewModel?.currentPath?.value == Environment.getExternalStorageDirectory().toString())
-            finish()
+            super.onBackPressed()
         else
             mDirViewModel?.goToPrevPath()
     }

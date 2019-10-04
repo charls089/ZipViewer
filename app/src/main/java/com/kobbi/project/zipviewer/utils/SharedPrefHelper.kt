@@ -18,19 +18,6 @@ class SharedPrefHelper private constructor() {
         }
 
         @JvmStatic
-        fun setBool(context: Context, key: String, value: Boolean) {
-            getPreference(context).edit().run {
-                putBoolean(key, value)
-                apply()
-            }
-        }
-
-        @JvmStatic
-        fun getBool(context: Context, key: String, defValue: Boolean = false): Boolean {
-            return getPreference(context).getBoolean(key, defValue)
-        }
-
-        @JvmStatic
         fun setInt(context: Context, key: String, value: Int) {
             getPreference(context).edit().run {
                 putInt(key, value)
@@ -40,19 +27,6 @@ class SharedPrefHelper private constructor() {
 
         fun getInt(context: Context, key: String, defValue: Int = 0): Int {
             return getPreference(context).getInt(key, defValue)
-        }
-
-        @JvmStatic
-        fun setLong(context: Context, key: String, value: Long) {
-            getPreference(context).edit().run {
-                putLong(key, value)
-                apply()
-            }
-        }
-
-        @JvmStatic
-        fun getLong(context: Context, key: String, defValue: Long = 0L): Long {
-            return getPreference(context).getLong(key, defValue)
         }
 
         @JvmStatic

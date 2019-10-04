@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kobbi.project.zipviewer.R
-import com.kobbi.project.zipviewer.utils.SharedPrefHelper
+import com.kobbi.project.zipviewer.utils.Utils
 
 class SplashActivity : AppCompatActivity() {
     companion object {
@@ -65,13 +65,12 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startService() {
-        val lastOpenFilePath =
-            SharedPrefHelper.getString(applicationContext, SharedPrefHelper.KEY_LAST_OPEN_FILE_PATH)
-        val intent = if (lastOpenFilePath.isEmpty())
-            Intent(applicationContext, MainActivity::class.java)
-        else
-            Intent(applicationContext, ViewPageActivity::class.java)
-        startActivity(intent)
-        finish()
+        applicationContext?.let { context ->
+            val lastOpenFilePath = Utils.getPath(context)
+            val clazz =
+                if (lastOpenFilePath.isEmpty()) MainActivity::class.java else ViewPageActivity::class.java
+            startActivity(Intent(context, clazz))
+            finish()
+        }
     }
 }

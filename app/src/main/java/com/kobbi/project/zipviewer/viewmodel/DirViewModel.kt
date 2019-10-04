@@ -3,10 +3,12 @@ package com.kobbi.project.zipviewer.viewmodel
 import android.app.Application
 import android.os.Build
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kobbi.project.zipviewer.utils.SingleLiveEvent
+import com.kobbi.project.zipviewer.utils.Utils
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileFilter
@@ -22,7 +24,6 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
 
     private var rootPath = Environment.getExternalStorageDirectory().toString()
 
-    private val mSelectedDir = mutableListOf<String>()
     private val mCachePath = application.applicationContext.cacheDir
 
     init {
@@ -31,45 +32,37 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clickItem(position: Int) {
         _currentItems.value?.get(position)?.let {
-            if (it.isDirectory) {
-                mSelectedDir.add(it.name)
-                setItems(getCurrentPath())
-            } else if (it.extension.endsWith("zip")) {
-                //unzip
-                unzip(it, mCachePath)
-            } else if (it.extension.endsWith("png") ||
-                it.extension.endsWith("jpg") ||
-                it.extension.endsWith("gif")
-            ) {
-                _showView.call(it.path)
+            when {
+                Utils.isDirectory(it) -> {
+                    setItems(it.path)
+                }
+                Utils.isZipFile(it) -> unzip(it, mCachePath)
+                Utils.isPictureFile(it) -> _showView.call(it.path)
             }
         }
     }
 
     fun goToPrevPath() {
-        if (mSelectedDir.isNotEmpty())
-            mSelectedDir.removeAt(mSelectedDir.size - 1)
-        setItems(getCurrentPath())
+        val currentPath = _currentPath.value
+        Log.e("####", "currentPath : $currentPath")
+        Log.e("####", "mCachePath : $mCachePath")
+        currentPath?.let {
+            val prevPath = currentPath.substringBeforeLast('/')
+            Log.e("####", "prevPath : $prevPath")
+            setItems(prevPath)
+        }
     }
 
     fun setItems(path: String) {
-        val filterList = File(path).listFiles(FileFilter {
-            (it.isDirectory && !it.name.startsWith('.'))||
-                    it.extension.endsWith("zip") ||
-                    it.extension.endsWith("png") ||
-                    it.extension.endsWith("jpg") ||
-                    it.extension.endsWith("gif")
-        })?.toList()
+        val f = File(path)
+        val file = if (f.isDirectory) f else f.parentFile
+        Log.e("####", "file : $file")
+        val filterList = file.listFiles(FileFilter {
+            Utils.isDirectory(it) || Utils.isZipFile(it) || Utils.isPictureFile(it)
+        })?.toList()?.sorted()
+        Log.e("####", "filterList : $filterList")
         _currentItems.postValue(filterList)
-        _currentPath.postValue(path)
-    }
-
-    private fun getCurrentPath(): String {
-        var selectPath = ""
-        mSelectedDir.forEach {
-            selectPath += "/$it"
-        }
-        return rootPath + selectPath
+        _currentPath.postValue(file.path)
     }
 
     private fun unzip(zipFile: File, targetPath: File?) {
@@ -94,9 +87,6 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
             }
-            mSelectedDir.clear()
-//            rootPath = dir.path
-//            setItems(dir.path)
             _showView.call(dir.path)
 
         }
