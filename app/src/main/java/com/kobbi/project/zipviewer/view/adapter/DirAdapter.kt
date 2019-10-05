@@ -40,7 +40,7 @@ class DirAdapter(items: List<File>) : RecyclerView.Adapter<DirAdapter.ViewHolder
     override fun getItemCount() = mItems.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(mItems[position])
+        holder.bind(position)
     }
 
     fun setOnClickListener(clickListener: ClickListener) {
@@ -69,8 +69,10 @@ class DirAdapter(items: List<File>) : RecyclerView.Adapter<DirAdapter.ViewHolder
             return true
         }
 
-        fun bind(file: File) {
+        fun bind(position:Int) {
+            val file = mItems[position]
             binding.setVariable(BR.file, file)
+            binding.setVariable(BR.file_position, position)
             getImage(file)
         }
 

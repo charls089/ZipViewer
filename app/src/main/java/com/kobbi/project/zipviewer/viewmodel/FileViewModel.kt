@@ -32,15 +32,19 @@ class FileViewModel : ViewModel() {
         }
     }
 
-    fun setItems(path: String) {
+    fun setItems(path: String, page: Int = -1) {
         val f = File(path)
         val file = if (f.isDirectory) f else f.parentFile
         val fileList = file.listFiles().filter {
             Utils.isPictureFile(it)
         }
         _fileList.postValue(fileList)
-        val lastPosition = fileList.indexOf(f)
-        if (lastPosition != -1)
-            _position.postValue(lastPosition)
+        if (page == -1) {
+            val lastPosition = fileList.indexOf(f)
+            if (lastPosition != -1)
+                _position.postValue(lastPosition)
+        } else {
+            _position.postValue(page)
+        }
     }
 }

@@ -3,7 +3,6 @@ package com.kobbi.project.zipviewer.viewmodel
 import android.app.Application
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,11 +43,8 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
 
     fun goToPrevPath() {
         val currentPath = _currentPath.value
-        Log.e("####", "currentPath : $currentPath")
-        Log.e("####", "mCachePath : $mCachePath")
         currentPath?.let {
             val prevPath = currentPath.substringBeforeLast('/')
-            Log.e("####", "prevPath : $prevPath")
             setItems(prevPath)
         }
     }
@@ -56,11 +52,9 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
     fun setItems(path: String) {
         val f = File(path)
         val file = if (f.isDirectory) f else f.parentFile
-        Log.e("####", "file : $file")
         val filterList = file.listFiles(FileFilter {
             Utils.isDirectory(it) || Utils.isZipFile(it) || Utils.isPictureFile(it)
         })?.toList()?.sorted()
-        Log.e("####", "filterList : $filterList")
         _currentItems.postValue(filterList)
         _currentPath.postValue(file.path)
     }

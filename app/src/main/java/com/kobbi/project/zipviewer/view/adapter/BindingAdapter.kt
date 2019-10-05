@@ -2,7 +2,6 @@ package com.kobbi.project.zipviewer.view.adapter
 
 import android.graphics.Bitmap
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -120,13 +119,11 @@ class BindingAdapter private constructor() {
         @BindingAdapter("app:setCurrentPath")
         @JvmStatic
         fun setCurrentPath(view: TextView, path: String?) {
-            Log.e("####", "path : $path")
             path?.let {
                 val rootPath = Environment.getExternalStorageDirectory().path
                 val isStart = it.startsWith(rootPath)
                 val f = File(path)
                 val nPath = if (!f.isDirectory) f.parent else f.path
-                Log.e("####", "nPath : $nPath")
 
                 val sb = StringBuilder()
                 val removeRootPath = if (isStart) {
@@ -135,7 +132,6 @@ class BindingAdapter private constructor() {
                 } else {
                     nPath
                 }
-                Log.e("####", "isStart : $isStart / removeRootPath : $removeRootPath")
                 val list = removeRootPath.split('/')
                 list.forEach { folderName ->
                     sb.append(" >> ")
@@ -149,28 +145,28 @@ class BindingAdapter private constructor() {
         @JvmStatic
         fun getFileSize(view: TextView, length: Long?) {
             length?.let {
-                var devide = 1024
+                var b = length
                 var count = 0
-                if (length >= devide) {
-                    devide *= 1024
+                if (b >= 1024) {
+                    b/=1024
                     count++
-                    if (length >= devide) {
-                        devide *= 1024
+                    if (b >= 1024) {
+                        b/=1024
                         count++
-                        if (length >= 1024) {
-                            devide *= 1024
+                        if (b >= 1024) {
+                            b/=1024
                             count++
                         }
                     }
                 }
-                val b = length / devide
                 val suffix = when(count) {
                     0 -> "byte"
-                    1 -> "Kb"
-                    2 -> "Mb"
-                    3 -> "Gb"
+                    1 -> "KB"
+                    2 -> "MB"
+                    3 -> "GB"
                     else -> "byte"
                 }
+                view.text = "$b $suffix"
             }
         }
     }

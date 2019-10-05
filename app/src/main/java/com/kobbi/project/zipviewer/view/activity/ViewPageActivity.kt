@@ -19,11 +19,12 @@ class ViewPageActivity : BaseActivity() {
             ViewModelProviders.of(this@ViewPageActivity)[FileViewModel::class.java].apply {
                 applicationContext?.let { context ->
                     val savePath = Utils.getPath(context)
+                    val savePage = Utils.getPage(context)
                     intent?.extras?.getString("path")?.let {
                         Utils.setPath(context, it)
                         this.setItems(it)
                     } ?: if (savePath.isNotEmpty())
-                        this.setItems(savePath)
+                        this.setItems(savePath, savePage)
                     position.observe(this@ViewPageActivity, Observer {
                         Utils.setPage(context, it)
                     })
