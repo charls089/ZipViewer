@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
-
+        android:background="?attr/selectableItemBackground"
         android:padding="5dp">
 
         <ImageView
@@ -48,7 +48,7 @@
             android:text="@{file.name}"
             android:textAlignment="textStart"
             android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@id/tv_item_file_size"
+            app:layout_constraintEnd_toStartOf="@+id/tv_item_file_position"
             app:layout_constraintStart_toEndOf="@+id/iv_file_img"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
@@ -66,24 +66,27 @@
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/tv_item_file_size"
+            android:id="@+id/tv_item_file_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textSize="14dp"
-            app:getFileSize="@{file.length()}"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:text="@{String.valueOf(file_position + 1)}"
+            android:textSize="13dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_item_file_size"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpUsage" />
 
         <TextView
-            android:id="@+id/tv_item_file_position"
+            android:id="@+id/tv_item_file_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(file_position)}"
+            android:textSize="14dp"
+            app:getFileSize="@{file}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

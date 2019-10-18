@@ -87,7 +87,7 @@ class BindingAdapter private constructor() {
                         if (Utils.isPictureFile(this)) {
                             setImageBitmap(img)
                         } else {
-                            setImageResource(R.drawable.baseline_inbox_24)
+                            setImageResource(R.drawable.icons8_archive_folder_96)
                         }
                     }
                 }
@@ -121,16 +121,21 @@ class BindingAdapter private constructor() {
         fun setCurrentPath(view: TextView, path: String?) {
             path?.let {
                 val rootPath = Environment.getExternalStorageDirectory().path
-                val isStart = it.startsWith(rootPath)
+                val cachePath = view.context.cacheDir.toString()
                 val f = File(path)
                 val nPath = if (!f.isDirectory) f.parent else f.path
 
                 val sb = StringBuilder()
-                val removeRootPath = if (isStart) {
-                    sb.append("내장 메모리")
-                    nPath.drop(rootPath.length + 1)
-                } else {
-                    nPath
+                val removeRootPath = when {
+                    it.startsWith(rootPath) -> {
+                        sb.append("내장 메모리")
+                        nPath.drop(rootPath.length + 1)
+                    }
+                    it.startsWith(cachePath) -> {
+                        sb.append("임시보관함")
+                        nPath.drop(cachePath.length + 1)
+                    }
+                    else -> nPath
                 }
                 val list = removeRootPath.split('/')
                 list.forEach { folderName ->
@@ -143,30 +148,26 @@ class BindingAdapter private constructor() {
 
         @BindingAdapter("app:getFileSize")
         @JvmStatic
-        fun getFileSize(view: TextView, length: Long?) {
-            length?.let {
-                var b = length
-                var count = 0
-                if (b >= 1024) {
-                    b/=1024
-                    count++
-                    if (b >= 1024) {
-                        b/=1024
+        fun getFileSize(view: TextView, file: File?) {
+            file?.run {
+                if (!isDirectory) {
+                    var b = length()
+                    var count = 0
+                    while (b >= 1024) {
+                        b /= 1024
                         count++
-                        if (b >= 1024) {
-                            b/=1024
-                            count++
-                        }
                     }
+                    val suffix = when (count) {
+                        1 -> "KB"
+                        2 -> "MB"
+                        3 -> "GB"
+                        else -> "byte"
+                    }
+                    view.text = "$b $suffix"
+                    view.visibility = View.VISIBLE
+                } else {
+                    view.visibility = View.INVISIBLE
                 }
-                val suffix = when(count) {
-                    0 -> "byte"
-                    1 -> "KB"
-                    2 -> "MB"
-                    3 -> "GB"
-                    else -> "byte"
-                }
-                view.text = "$b $suffix"
             }
         }
     }

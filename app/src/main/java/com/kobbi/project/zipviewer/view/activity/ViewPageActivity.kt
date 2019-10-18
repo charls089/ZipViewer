@@ -2,8 +2,6 @@ package com.kobbi.project.zipviewer.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -28,6 +26,12 @@ class ViewPageActivity : BaseActivity() {
                     position.observe(this@ViewPageActivity, Observer {
                         Utils.setPage(context, it)
                     })
+                    clickList.observe(this@ViewPageActivity, Observer {
+                        goToMainList(false)
+                    })
+                    clickHome.observe(this@ViewPageActivity, Observer {
+                        goToMainList(true)
+                    })
                 }
             }
         DataBindingUtil.setContentView<ActivityViewPageBinding>(
@@ -39,23 +43,13 @@ class ViewPageActivity : BaseActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_view_page, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_list, R.id.action_home -> {
-                val intent = Intent(applicationContext, MainActivity::class.java).apply {
-                    if (item.itemId == R.id.action_list) {
-                        putExtra("path", Utils.getPath(applicationContext))
-                    }
-                }
-                startActivity(intent)
-                finish()
+    private fun goToMainList(isHome:Boolean) {
+        val intent = Intent(applicationContext, MainActivity::class.java).apply {
+            if (!isHome) {
+                putExtra("path", Utils.getPath(applicationContext))
             }
         }
-        return super.onOptionsItemSelected(item)
+        startActivity(intent)
+        finish()
     }
 }

@@ -21,9 +21,8 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentItems: MutableLiveData<List<File>> = MutableLiveData()
     private val _showView: SingleLiveEvent<String> = SingleLiveEvent()
 
-    private var rootPath = Environment.getExternalStorageDirectory().toString()
-
-    private val mCachePath = application.applicationContext.cacheDir
+    private val rootPath = Environment.getExternalStorageDirectory().toString()
+    private val cachePath = application.applicationContext.cacheDir
 
     init {
         setItems(rootPath)
@@ -35,10 +34,15 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
                 Utils.isDirectory(it) -> {
                     setItems(it.path)
                 }
-                Utils.isZipFile(it) -> unzip(it, mCachePath)
+                Utils.isZipFile(it) -> unzip(it, cachePath)
                 Utils.isPictureFile(it) -> _showView.call(it.path)
             }
         }
+    }
+
+    fun isRootPath(): Boolean {
+        val value = currentPath.value
+        return value == rootPath || value == cachePath.toString()
     }
 
     fun goToPrevPath() {
@@ -84,5 +88,19 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
             _showView.call(dir.path)
 
         }
+    }
+
+    private fun extensionFilter(file: File): List<File> {
+        val results = mutableSetOf<File>()
+        file.listFiles().forEach {
+            if (it.isDirectory)
+                results.addAll(extensionFilter(it))
+            else
+                if (Utils.isZipFile(it) || Utils.isPictureFile(it)) {
+                    results.add(it.parentFile)
+
+                }
+        }
+        return results.toList()
     }
 }

@@ -2,7 +2,6 @@ package com.kobbi.project.zipviewer.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -36,9 +35,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (mDirViewModel?.currentPath?.value == Environment.getExternalStorageDirectory().toString())
-            super.onBackPressed()
-        else
-            mDirViewModel?.goToPrevPath()
+        mDirViewModel?.run {
+            if (isRootPath())
+                super.onBackPressed()
+            else
+                goToPrevPath()
+        } ?: super.onBackPressed()
     }
 }
