@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZipViewer</string>
+    <string name="app_name">Zip뷰</string>
 
     <string name="info_exit_message">\'뒤로\'버튼 한번 더 누르시면 종료됩니다.</string>
     <string name="info_home_img_btn">go to home</string>
