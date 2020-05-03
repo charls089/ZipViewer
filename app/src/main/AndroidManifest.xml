@@ -7,12 +7,13 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/icons8_file_preview_64"
+        android:icon="@mipmap/icons8_file_preview_64"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/icons8_file_preview_64"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/icons8_file_preview_64"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="LockedOrientationActivity">
         <activity
             android:name=".view.activity.ViewPageActivity"
             android:screenOrientation="portrait" />

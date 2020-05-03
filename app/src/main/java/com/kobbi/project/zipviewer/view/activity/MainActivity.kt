@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityMainBinding
-import com.kobbi.project.zipviewer.viewmodel.DirViewModel
+import com.kobbi.project.zipviewer.presenter.viewmodel.DirViewModel
 
 class MainActivity : BaseActivity() {
 

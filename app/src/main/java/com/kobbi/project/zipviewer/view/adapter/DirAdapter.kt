@@ -9,8 +9,8 @@ import com.kobbi.project.zipviewer.BR
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ItemFileBinding
 import com.kobbi.project.zipviewer.utils.Utils
-import com.kobbi.weather.info.presenter.listener.ClickListener
-import com.kobbi.weather.info.presenter.listener.LongClickListener
+import com.kobbi.project.zipviewer.presenter.listener.ClickListener
+import com.kobbi.project.zipviewer.presenter.listener.LongClickListener
 import java.io.File
 import java.util.concurrent.Executors
 

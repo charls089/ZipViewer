@@ -1,4 +1,4 @@
-package com.kobbi.project.zipviewer.viewmodel
+package com.kobbi.project.zipviewer.presenter.viewmodel
 
 import android.app.Application
 import android.os.Build
@@ -6,6 +6,7 @@ import android.os.Environment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.kobbi.project.zipviewer.presenter.file.FileManager
 import com.kobbi.project.zipviewer.utils.SingleLiveEvent
 import com.kobbi.project.zipviewer.utils.Utils
 import java.io.BufferedInputStream
@@ -15,13 +16,13 @@ import java.util.zip.ZipFile
 
 class DirViewModel(application: Application) : AndroidViewModel(application) {
     val currentPath: LiveData<String> get() = _currentPath
-    val currrentItems: LiveData<List<File>> get() = _currentItems
+    val currentItems: LiveData<List<File>> get() = _currentItems
     val showView: SingleLiveEvent<String> get() = _showView
     private val _currentPath: MutableLiveData<String> = MutableLiveData()
     private val _currentItems: MutableLiveData<List<File>> = MutableLiveData()
     private val _showView: SingleLiveEvent<String> = SingleLiveEvent()
 
-    private val rootPath = Environment.getExternalStorageDirectory().toString()
+    val rootPath = Environment.getExternalStorageDirectory().toString()
     private val cachePath = application.applicationContext.cacheDir
 
     init {
@@ -61,6 +62,10 @@ class DirViewModel(application: Application) : AndroidViewModel(application) {
         })?.toList()?.sorted()
         _currentItems.postValue(filterList)
         _currentPath.postValue(file.path)
+    }
+
+    fun setItemPath(path: String): List<String> {
+        return listOf()
     }
 
     private fun unzip(zipFile: File, targetPath: File?) {

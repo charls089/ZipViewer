@@ -1,4 +1,4 @@
-package com.kobbi.project.zipviewer.viewmodel
+package com.kobbi.project.zipviewer.presenter.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

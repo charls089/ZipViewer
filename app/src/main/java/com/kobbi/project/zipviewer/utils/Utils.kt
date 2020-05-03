@@ -10,14 +10,19 @@ class Utils private constructor() {
     companion object {
         @JvmStatic
         fun isPictureFile(file: File): Boolean {
-            return file.extension.endsWith("png") ||
-                    file.extension.endsWith("jpg") ||
-                    file.extension.endsWith("gif")
+            return listOf("png", "jpg", "jpeg", "gif").any { extension ->
+                file.extension.endsWith(extension)
+            }
         }
 
         @JvmStatic
         fun isZipFile(file: File): Boolean {
             return file.extension.endsWith("zip")
+        }
+
+        @JvmStatic
+        fun isTextFile(file: File): Boolean {
+            return file.extension.endsWith("txt")
         }
 
         @JvmStatic
@@ -67,6 +72,5 @@ class Utils private constructor() {
         @JvmStatic
         fun convertLongToDate(timeMills: Long) =
             SimpleDateFormat("yyyy-MM-dd, HH:mm:ss", Locale.getDefault()).format(timeMills)
-
     }
 }

@@ -7,7 +7,7 @@
 
         <variable
             name="dirVm"
-            type="com.kobbi.project.zipviewer.viewmodel.DirViewModel" />
+            type="com.kobbi.project.zipviewer.presenter.viewmodel.DirViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,16 +16,17 @@
         android:padding="10dp"
         tools:context=".view.activity.MainActivity">
 
-        <TextView
-            android:id="@+id/tv_current_path"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_path"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:setCurrentPath="@{dirVm.currentPath}"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:setPath="@{dirVm.currentPathList}"
+            app:setListener="@{dirVm.clickListener}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -43,8 +44,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_current_path"
-            app:setDir="@{dirVm.currrentItems}"
+            app:layout_constraintTop_toBottomOf="@id/rv_path"
+            app:setDir="@{dirVm.currentItems}"
             app:setVm="@{dirVm}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

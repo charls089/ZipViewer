@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.kobbi.project.zipviewer.R
 import com.kobbi.project.zipviewer.databinding.ActivityViewPageBinding
 import com.kobbi.project.zipviewer.utils.Utils
-import com.kobbi.project.zipviewer.viewmodel.FileViewModel
+import com.kobbi.project.zipviewer.presenter.viewmodel.FileViewModel
 
 class ViewPageActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

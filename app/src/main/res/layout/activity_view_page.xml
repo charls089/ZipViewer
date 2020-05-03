@@ -7,7 +7,7 @@
 
         <variable
             name="fileVm"
-            type="com.kobbi.project.zipviewer.viewmodel.FileViewModel" />
+            type="com.kobbi.project.zipviewer.presenter.viewmodel.FileViewModel" />
 
         <variable
             name="fragmentManager"

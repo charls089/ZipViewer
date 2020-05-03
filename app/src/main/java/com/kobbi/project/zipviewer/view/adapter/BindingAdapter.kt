@@ -3,18 +3,20 @@ package com.kobbi.project.zipviewer.view.adapter
 import android.graphics.Bitmap
 import android.os.Environment
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.kobbi.project.zipviewer.R
+import com.kobbi.project.zipviewer.presenter.file.FileManager.FileType
+import com.kobbi.project.zipviewer.presenter.listener.ClickListener
+import com.kobbi.project.zipviewer.presenter.viewmodel.DirViewModel
 import com.kobbi.project.zipviewer.utils.Utils
-import com.kobbi.project.zipviewer.viewmodel.DirViewModel
-import com.kobbi.weather.info.presenter.listener.ClickListener
 import java.io.File
-import java.lang.StringBuilder
 
 class BindingAdapter private constructor() {
     companion object {
@@ -44,6 +46,25 @@ class BindingAdapter private constructor() {
                     }
                 }
             }
+        }
+
+        @BindingAdapter("app:setPath", "app:setClickListener")
+        @JvmStatic
+        fun setPath(
+            recyclerView: RecyclerView,
+            items: List<String>?,
+            listener: ClickListener?
+        ) {
+            if (items != null)
+                recyclerView.adapter?.run {
+                    if (this is PathAdapter) {
+                        setItems(items)
+                    }
+                } ?: kotlin.run {
+                    recyclerView.adapter = PathAdapter(items).apply {
+                        clickListener = listener
+                    }
+                }
         }
 
         @BindingAdapter("app:setDir", "app:setVm")
@@ -98,19 +119,40 @@ class BindingAdapter private constructor() {
         @JvmStatic
         fun setTotal(view: TextView, items: List<File>?, position: Int) {
             items?.let {
-                view.text = "${position + 1} / ${it.size}"
+                view.text = String.format("%d / %d", position + 1, it.size)
             }
         }
 
-        @BindingAdapter("app:setViewImg")
+        @BindingAdapter("app:setViewItem")
         @JvmStatic
-        fun setViewImg(view: ImageView, path: String?) {
+        fun setViewItem(layout: LinearLayout, path: String?) {
             path?.let {
                 val file = File(path)
                 if (file.exists()) {
-                    val bitmap = Utils.getBitmap(file, 1440, 1080)
-                    bitmap?.run {
-                        view.setImageBitmap(this)
+                    val itemView = when (FileType.getType(file)) {
+                        FileType.IMG -> {
+                            ImageView(layout.context).apply {
+                                setImageBitmap(Utils.getBitmap(file, 1440, 1080))
+                            }
+
+                        }
+                        FileType.TXT -> {
+                            TextView(layout.context).apply {
+                                text = file.readText()
+                            }
+                        }
+                        else -> {
+                            null
+                        }
+                    }
+                    itemView?.run {
+                        layout.addView(
+                            this,
+                            ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                        )
                     }
                 }
             }
